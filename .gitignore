@@ -1,0 +1,61 @@
+# Builds
+Builds/
+JuceLibraryCode/
+
+# IDE
+.vscode/
+.idea/
+*.xcuserstate
+*.xcworkspace/
+xcuserdata/
+
+# macOS
+.DS_Store
+.AppleDouble
+.LSOverride
+._*
+
+# Windows
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+
+# Compiled Object files
+*.slo
+*.lo
+*.o
+*.obj
+
+# Precompiled Headers
+*.gch
+*.pch
+
+# Compiled Dynamic libraries
+*.so
+*.dylib
+*.dll
+
+# Compiled Static libraries
+*.lai
+*.la
+*.a
+*.lib
+
+# Executables
+*.exe
+*.out
+*.app
+
+# Plugin formats
+*.vst3
+*.component
+*.appex
+
+# Debug files
+*.dSYM/
+*.su
+*.idb
+*.pdb
+
+# JUCE specific
+*.jucer.bak 

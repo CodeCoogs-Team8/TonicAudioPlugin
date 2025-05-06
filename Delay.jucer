@@ -1,0 +1,146 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<JUCERPROJECT id="IGwZYV" name="Tonic" projectType="audioplug" useAppConfig="0"
+              addUsingNamespaceToJuceHeader="0" jucerFormatVersion="1" pluginFormats="buildAU,buildAUv3,buildStandalone,buildVST3"
+              companyName="Tonic Audio" pluginCode="Tonc" cppLanguageStandard="20"
+              companyWebsite="www.tonicAudio.dev" displaySplashScreen="1" splashScreenColour="Dark">
+  <MAINGROUP id="qvnCsp" name="Tonic">
+    <GROUP id="{D6B3134D-66C9-14CD-258B-15BE29B81A10}" name="Assets">
+      <FILE id="LFLhGv" name="Lato-Medium.ttf" compile="0" resource="1" file="../../Downloads/Lato-Medium.ttf"/>
+      <GROUP id="{752FF57F-4AA6-122D-F575-CBDC93670338}" name="Icons">
+        <FILE id="JZ63hB" name="chorus.svg" compile="0" resource="1" file="Assets/Icons/chorus.svg"/>
+        <FILE id="wQNp4w" name="delay.svg" compile="0" resource="1" file="Assets/Icons/delay.svg"/>
+        <FILE id="E0Tws1" name="distortion.svg" compile="0" resource="1" file="Assets/Icons/distortion.svg"/>
+        <FILE id="ABeJm9" name="eq.svg" compile="0" resource="1" file="Assets/Icons/eq.svg"/>
+        <FILE id="SKKd4w" name="reverb.svg" compile="0" resource="1" file="Assets/Icons/reverb.svg"/>
+      </GROUP>
+    </GROUP>
+    <GROUP id="{8CA5044F-30F7-514E-3B5C-EBAF1BCFC131}" name="Source">
+      <GROUP id="{2D2D4819-CEDA-2404-0D2B-3DD1AE66B52B}" name="Components">
+        <FILE id="KBfVTh" name="EffectButton.cpp" compile="1" resource="0"
+              file="Source/Components/EffectButton.cpp"/>
+        <FILE id="oYNC38" name="EffectButton.h" compile="0" resource="0" file="Source/Components/EffectButton.h"/>
+        <FILE id="t71q39" name="EffectNodeComponent.cpp" compile="1" resource="0"
+              file="Source/Components/EffectNodeComponent.cpp"/>
+        <FILE id="SbJtTG" name="EffectNodeComponent.h" compile="0" resource="0"
+              file="Source/Components/EffectNodeComponent.h"/>
+        <FILE id="D2iqPB" name="PresetFinderComponent.cpp" compile="1" resource="0"
+              file="Source/Components/PresetFinderComponent.cpp"/>
+        <FILE id="wtVtEa" name="PresetFinderComponent.h" compile="0" resource="0"
+              file="Source/Components/PresetFinderComponent.h"/>
+        <FILE id="AJZUSZ" name="ToolbarComponent.cpp" compile="1" resource="0"
+              file="Source/Components/ToolbarComponent.cpp"/>
+        <FILE id="POZHcd" name="ToolbarComponent.h" compile="0" resource="0"
+              file="Source/Components/ToolbarComponent.h"/>
+        <FILE id="RqtwDY" name="ComboBoxComponent.cpp" compile="1" resource="0"
+              file="Source/Components/ComboBoxComponent.cpp"/>
+        <FILE id="HSJ0DF" name="ComboBoxComponent.h" compile="0" resource="0"
+              file="Source/Components/ComboBoxComponent.h"/>
+        <FILE id="EzMmic" name="LevelMeterComponent.cpp" compile="1" resource="0"
+              file="Source/Components/LevelMeterComponent.cpp"/>
+        <FILE id="e51Cfc" name="LevelMeterComponent.h" compile="0" resource="0"
+              file="Source/Components/LevelMeterComponent.h"/>
+        <FILE id="nuoUWP" name="KnobComponent.cpp" compile="1" resource="0"
+              file="Source/Components/KnobComponent.cpp"/>
+        <FILE id="QK1OYV" name="KnobComponent.h" compile="0" resource="0" file="Source/Components/KnobComponent.h"/>
+        <FILE id="DrcDT3" name="ConnectionComponent.cpp" compile="1" resource="0"
+              file="Source/Components/ConnectionComponent.cpp"/>
+        <FILE id="Rjcnop" name="ConnectionComponent.h" compile="0" resource="0"
+              file="Source/Components/ConnectionComponent.h"/>
+        <FILE id="LLPwc4" name="TopBarComponent.cpp" compile="1" resource="0"
+              file="Source/Components/TopBarComponent.cpp"/>
+        <FILE id="QW77OL" name="TopBarComponent.h" compile="0" resource="0"
+              file="Source/Components/TopBarComponent.h"/>
+        <FILE id="nT1hcK" name="EffectParameterComponent.cpp" compile="1" resource="0"
+              file="Source/Components/EffectParameterComponent.cpp"/>
+        <FILE id="XFe1Do" name="EffectParameterComponent.h" compile="0" resource="0"
+              file="Source/Components/EffectParameterComponent.h"/>
+        <FILE id="fWsmx9" name="EffectParametersContainer.cpp" compile="1"
+              resource="0" file="Source/Components/EffectParametersContainer.cpp"/>
+        <FILE id="TV73Hi" name="EffectParametersContainer.h" compile="0" resource="0"
+              file="Source/Components/EffectParametersContainer.h"/>
+        <FILE id="QxJumm" name="HorizontalLevelMeter.cpp" compile="1" resource="0"
+              file="Source/Components/HorizontalLevelMeter.cpp"/>
+        <FILE id="qKIe4W" name="LookandFeel.cpp" compile="1" resource="0" file="Source/Components/LookandFeel.cpp"/>
+        <FILE id="VnuiJi" name="LookandFeel.h" compile="0" resource="0" file="Source/Components/LookandFeel.h"/>
+        <FILE id="Sft3cG" name="HorizontalLevelMeter.h" compile="0" resource="0"
+              file="Source/Components/HorizontalLevelMeter.h"/>
+        <FILE id="LR7ZWT" name="WorkspaceComponent.cpp" compile="1" resource="0"
+              file="Source/Components/WorkspaceComponent.cpp"/>
+        <FILE id="Dvd2AS" name="WorkspaceComponent.h" compile="0" resource="0"
+              file="Source/Components/WorkspaceComponent.h"/>
+      </GROUP>
+      <GROUP id="{91FB3E90-7404-23A0-9890-9F038BEE7E0A}" name="Graph">
+        <FILE id="twEYt6" name="EffectGraphManager.cpp" compile="1" resource="0"
+              file="Source/Graph/EffectGraphManager.cpp"/>
+        <FILE id="Mpgg1h" name="EffectGraphManager.h" compile="0" resource="0"
+              file="Source/Graph/EffectGraphManager.h"/>
+      </GROUP>
+      <GROUP id="{7C12D35A-E3C8-297A-4670-30FFF188AA57}" name="Effects">
+        <FILE id="A04MJo" name="EffectRack.cpp" compile="1" resource="0" file="Source/Effects/EffectRack.cpp"/>
+        <FILE id="bWWviw" name="EffectRack.h" compile="0" resource="0" file="Source/Effects/EffectRack.h"/>
+        <FILE id="TrByZN" name="Chorus.cpp" compile="1" resource="0" file="Source/Effects/Chorus.cpp"/>
+        <FILE id="yYjagF" name="Chorus.h" compile="0" resource="0" file="Source/Effects/Chorus.h"/>
+        <FILE id="RmecZ0" name="Delay.cpp" compile="1" resource="0" file="Source/Effects/Delay.cpp"/>
+        <FILE id="D3YV9H" name="Delay.h" compile="0" resource="0" file="Source/Effects/Delay.h"/>
+        <FILE id="shJkTl" name="Distortion.cpp" compile="1" resource="0" file="Source/Effects/Distortion.cpp"/>
+        <FILE id="VWlqXM" name="Distortion.h" compile="0" resource="0" file="Source/Effects/Distortion.h"/>
+        <FILE id="Q4LqjO" name="Equalizer.cpp" compile="1" resource="0" file="Source/Effects/Equalizer.cpp"/>
+        <FILE id="Z5nfJ1" name="Equalizer.h" compile="0" resource="0" file="Source/Effects/Equalizer.h"/>
+        <FILE id="AhtbX1" name="Reverb.cpp" compile="1" resource="0" file="Source/Effects/Reverb.cpp"/>
+        <FILE id="yzS2wm" name="Reverb.h" compile="0" resource="0" file="Source/Effects/Reverb.h"/>
+        <FILE id="hX6T34" name="GainProcessor.cpp" compile="1" resource="0"
+              file="Source/Effects/GainProcessor.cpp"/>
+        <FILE id="SkGk8T" name="GainProcessor.h" compile="0" resource="0" file="Source/Effects/GainProcessor.h"/>
+      </GROUP>
+      <FILE id="ZbTrGU" name="PluginProcessor.cpp" compile="1" resource="0"
+            file="Source/PluginProcessor.cpp"/>
+      <FILE id="TzegJT" name="PluginProcessor.h" compile="0" resource="0"
+            file="Source/PluginProcessor.h"/>
+      <FILE id="ZpYxOE" name="PluginEditor.cpp" compile="1" resource="0"
+            file="Source/PluginEditor.cpp"/>
+      <FILE id="jQaTGq" name="PluginEditor.h" compile="0" resource="0" file="Source/PluginEditor.h"/>
+    </GROUP>
+  </MAINGROUP>
+  <MODULES>
+    <MODULE id="juce_audio_basics" showAllCode="1" useLocalCopy="0" useGlobalPath="1"/>
+    <MODULE id="juce_audio_devices" showAllCode="1" useLocalCopy="0" useGlobalPath="1"/>
+    <MODULE id="juce_audio_formats" showAllCode="1" useLocalCopy="0" useGlobalPath="1"/>
+    <MODULE id="juce_audio_plugin_client" showAllCode="1" useLocalCopy="0"
+            useGlobalPath="1"/>
+    <MODULE id="juce_audio_processors" showAllCode="1" useLocalCopy="0" useGlobalPath="1"/>
+    <MODULE id="juce_audio_utils" showAllCode="1" useLocalCopy="0" useGlobalPath="1"/>
+    <MODULE id="juce_core" showAllCode="1" useLocalCopy="0" useGlobalPath="1"/>
+    <MODULE id="juce_data_structures" showAllCode="1" useLocalCopy="0" useGlobalPath="1"/>
+    <MODULE id="juce_dsp" showAllCode="1" useLocalCopy="0" useGlobalPath="1"/>
+    <MODULE id="juce_events" showAllCode="1" useLocalCopy="0" useGlobalPath="1"/>
+    <MODULE id="juce_graphics" showAllCode="1" useLocalCopy="0" useGlobalPath="1"/>
+    <MODULE id="juce_gui_basics" showAllCode="1" useLocalCopy="0" useGlobalPath="1"/>
+    <MODULE id="juce_gui_extra" showAllCode="1" useLocalCopy="0" useGlobalPath="1"/>
+  </MODULES>
+  <JUCEOPTIONS JUCE_STRICT_REFCOUNTEDPOINTER="1" JUCE_VST3_CAN_REPLACE_VST2="0"/>
+  <EXPORTFORMATS>
+    <XCODE_MAC targetFolder="Builds/MacOSX">
+      <CONFIGURATIONS>
+        <CONFIGURATION isDebug="1" name="Debug" targetName="Tonic" enablePluginBinaryCopyStep="1"
+                       recommendedWarnings="LLVM"/>
+        <CONFIGURATION isDebug="0" name="Release" targetName="Tonic"/>
+      </CONFIGURATIONS>
+      <MODULEPATHS>
+        <MODULEPATH id="juce_audio_basics" path="../../JUCE/modules"/>
+        <MODULEPATH id="juce_audio_devices" path="../../JUCE/modules"/>
+        <MODULEPATH id="juce_audio_formats" path="../../JUCE/modules"/>
+        <MODULEPATH id="juce_audio_plugin_client" path="../../JUCE/modules"/>
+        <MODULEPATH id="juce_audio_processors" path="../../JUCE/modules"/>
+        <MODULEPATH id="juce_audio_utils" path="../../JUCE/modules"/>
+        <MODULEPATH id="juce_core" path="../../JUCE/modules"/>
+        <MODULEPATH id="juce_data_structures" path="../../JUCE/modules"/>
+        <MODULEPATH id="juce_events" path="../../JUCE/modules"/>
+        <MODULEPATH id="juce_graphics" path="../../JUCE/modules"/>
+        <MODULEPATH id="juce_gui_basics" path="../../JUCE/modules"/>
+        <MODULEPATH id="juce_gui_extra" path="../../JUCE/modules"/>
+        <MODULEPATH id="juce_dsp" path="../../JUCE/modules"/>
+      </MODULEPATHS>
+    </XCODE_MAC>
+  </EXPORTFORMATS>
+</JUCERPROJECT>
