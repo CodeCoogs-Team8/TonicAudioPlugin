@@ -41,14 +41,18 @@ public:
   void getStateInformation(juce::MemoryBlock &destData) override;
   void setStateInformation(const void *data, int sizeInBytes) override;
   juce::AudioProcessorValueTreeState parameters;
+
 private:
-  
   std::atomic<float> *delayTimeParam = nullptr;
   std::atomic<float> *feedbackParam = nullptr;
   std::atomic<float> *mixParam = nullptr;
 
   juce::dsp::DelayLine<float> delayLine;
-  double currentSampleRate = 44100.0;
+  double currentSampleRate = 0.0;                     // Initialize to 0 to indicate not set
+  static constexpr double MIN_SAMPLE_RATE = 8000.0;   // Minimum valid sample rate
+  static constexpr double MAX_SAMPLE_RATE = 192000.0; // Maximum valid sample rate
+
+  bool isSampleRateValid() const { return currentSampleRate >= MIN_SAMPLE_RATE && currentSampleRate <= MAX_SAMPLE_RATE; }
 
   JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(Delay)
 };

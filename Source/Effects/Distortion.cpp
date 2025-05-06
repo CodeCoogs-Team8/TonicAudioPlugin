@@ -9,6 +9,7 @@
 */
 
 #include "Distortion.h"
+#include <memory>
 
 Distortion::Distortion()
     : AudioProcessor(BusesProperties()
@@ -42,12 +43,19 @@ Distortion::Distortion()
                       0.0f,           // minimum value
                       2.0f,           // maximum value
                       1.0f            // default value
+                      ),
+                  std::make_unique<juce::AudioParameterChoice>(
+                      "type",                                                                          // parameterID
+                      "Distortion Type",                                                               // parameter name
+                      juce::StringArray("Soft Clip", "Hard Clip", "Fold", "Bit Crush", "Sample Rate"), // choices
+                      0                                                                                // default choice
                       )})
 {
   driveParam = parameters.getRawParameterValue("drive");
   rangeParam = parameters.getRawParameterValue("range");
   mixParam = parameters.getRawParameterValue("mix");
   outputGainParam = parameters.getRawParameterValue("outputGain");
+  typeParam = parameters.getRawParameterValue("type");
 }
 
 Distortion::~Distortion()
@@ -57,6 +65,7 @@ Distortion::~Distortion()
   rangeParam = nullptr;
   mixParam = nullptr;
   outputGainParam = nullptr;
+  typeParam = nullptr;
 }
 
 void Distortion::prepareToPlay(double sampleRate, int samplesPerBlock)
@@ -87,9 +96,50 @@ float Distortion::processSample(float sample, float drive, float range)
   range = std::max(0.0f, std::min(range, 1.0f));
 
   float input = sample * drive;
+  float processed = 0.0f;
 
-  // Soft clipping using tanh
-  float processed = std::tanh(input);
+  // Get current distortion type
+  int type = typeParam ? static_cast<int>(typeParam->load()) : 0;
+
+  switch (static_cast<DistortionType>(type))
+  {
+  case DistortionType::SoftClip:
+    processed = std::tanh(input);
+    break;
+
+  case DistortionType::HardClip:
+    processed = input < -1.0f ? -1.0f : (input > 1.0f ? 1.0f : input);
+    break;
+
+  case DistortionType::Fold:
+    // Wave folding implementation
+    processed = std::abs(std::fmod(input + 1.0f, 2.0f) - 1.0f);
+    break;
+
+  case DistortionType::BitCrush:
+    // Bit reduction implementation
+    {
+      const float bitDepth = 8.0f; // 8-bit reduction
+      const float maxValue = std::pow(2.0f, bitDepth) - 1.0f;
+      processed = std::round(input * maxValue) / maxValue;
+    }
+    break;
+
+  case DistortionType::SampleRate:
+    // Sample rate reduction implementation
+    {
+      static float lastSample = 0.0f;
+      static int sampleCounter = 0;
+      const int reductionFactor = 4; // Reduce sample rate by factor of 4
+
+      if (sampleCounter % reductionFactor == 0)
+        lastSample = input;
+
+      processed = lastSample;
+      sampleCounter++;
+    }
+    break;
+  }
 
   // Apply range control (blend between distorted and hard clipped)
   if (range < 1.0f)
@@ -105,8 +155,15 @@ void Distortion::processBlock(juce::AudioBuffer<float> &buffer, juce::MidiBuffer
 {
   juce::ScopedNoDenormals noDenormals;
 
+  // Check if we have a valid sample rate
+  if (!isSampleRateValid())
+  {
+    buffer.clear();
+    return;
+  }
+
   // Check if parameters are valid
-  if (!driveParam || !rangeParam || !mixParam || !outputGainParam)
+  if (!driveParam || !rangeParam || !mixParam || !outputGainParam || !typeParam)
     return;
 
   const int numChannels = buffer.getNumChannels();

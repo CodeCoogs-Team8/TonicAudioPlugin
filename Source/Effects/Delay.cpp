@@ -67,6 +67,13 @@ void Delay::processBlock(juce::AudioBuffer<float> &buffer, juce::MidiBuffer &mid
 {
   juce::ScopedNoDenormals noDenormals;
 
+  // Check if we have a valid sample rate
+  if (!isSampleRateValid())
+  {
+    buffer.clear();
+    return;
+  }
+
   // Safely get parameter values at the start of the block
   const float delayTime = delayTimeParam != nullptr ? delayTimeParam->load() : 0.5f;
   const float feedback = feedbackParam != nullptr ? feedbackParam->load() : 0.4f;
@@ -75,12 +82,9 @@ void Delay::processBlock(juce::AudioBuffer<float> &buffer, juce::MidiBuffer &mid
   const int numChannels = buffer.getNumChannels();
   const int numSamples = buffer.getNumSamples();
 
-  // Safely update delay time
-  if (currentSampleRate > 0.0)
-  {
-    const int delaySamples = static_cast<int>(delayTime * currentSampleRate);
-    delayLine.setDelay(delaySamples);
-  }
+  // Update delay time
+  const int delaySamples = static_cast<int>(delayTime * currentSampleRate);
+  delayLine.setDelay(delaySamples);
 
   // Process each channel
   for (int channel = 0; channel < numChannels; ++channel)

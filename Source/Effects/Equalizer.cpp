@@ -139,9 +139,8 @@ void Equalizer::processBlock(juce::AudioBuffer<float> &buffer, juce::MidiBuffer 
 {
   juce::ScopedNoDenormals noDenormals;
 
-  // Safety check for initialization and parameters
-  if (!isInitialized || !lowGainParam || !lowFreqParam || !midGainParam ||
-      !midFreqParam || !midQParam || !highGainParam || !highFreqParam)
+  // Check if we have a valid sample rate
+  if (!isSampleRateValid())
   {
     buffer.clear();
     return;
@@ -149,15 +148,18 @@ void Equalizer::processBlock(juce::AudioBuffer<float> &buffer, juce::MidiBuffer 
 
   // Update filters if needed
   if (filtersNeedUpdate)
+  {
     updateFilters();
+    filtersNeedUpdate = false;
+  }
 
-  // Process audio through filters
+  // Create an AudioBlock that references the entire buffer
   juce::dsp::AudioBlock<float> block(buffer);
-  juce::dsp::ProcessContextReplacing<float> context(block);
 
-  lowShelf.process(context);
-  midPeak.process(context);
-  highShelf.process(context);
+  // Process through each filter
+  lowShelf.process(juce::dsp::ProcessContextReplacing<float>(block));
+  midPeak.process(juce::dsp::ProcessContextReplacing<float>(block));
+  highShelf.process(juce::dsp::ProcessContextReplacing<float>(block));
 }
 
 juce::AudioProcessorEditor *Equalizer::createEditor()

@@ -65,9 +65,14 @@ private:
   // Processing state
   juce::dsp::DelayLine<float> delayLine;
   float lfoPhase = 0.0f;
-  double currentSampleRate = 44100.0;
+  double currentSampleRate = 0.0; // Initialize to 0 to indicate not set
   bool isInitialized = false;
   bool filtersNeedUpdate = true;
+
+  // Sample rate validation
+  static constexpr double MIN_SAMPLE_RATE = 8000.0;   // Minimum valid sample rate
+  static constexpr double MAX_SAMPLE_RATE = 192000.0; // Maximum valid sample rate
+  bool isSampleRateValid() const { return currentSampleRate >= MIN_SAMPLE_RATE && currentSampleRate <= MAX_SAMPLE_RATE; }
 
   // Parameter ranges and defaults
   static constexpr float minRate = 0.1f;

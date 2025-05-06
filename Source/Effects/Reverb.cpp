@@ -91,16 +91,17 @@ void Reverb::processBlock(juce::AudioBuffer<float> &buffer, juce::MidiBuffer &mi
 {
   juce::ScopedNoDenormals noDenormals;
 
-  // Update reverb parameters
-  juce::Reverb::Parameters params;
-  params.roomSize = roomSizeParam != nullptr ? roomSizeParam->load() : 0.5f;
-  params.damping = dampingParam != nullptr ? dampingParam->load() : 0.5f;
-  params.wetLevel = wetLevelParam != nullptr ? wetLevelParam->load() : 0.33f;
-  params.dryLevel = dryLevelParam != nullptr ? dryLevelParam->load() : 0.4f;
-  params.width = widthParam != nullptr ? widthParam->load() : 1.0f;
-  params.freezeMode = freezeModeParam != nullptr ? freezeModeParam->load() > 0.5f : false;
+  // Check if we have a valid sample rate
+  if (!isSampleRateValid())
+  {
+    buffer.clear();
+    return;
+  }
 
-  reverb.setParameters(params);
+  // Update reverb parameters
+  updateReverbParameters();
+
+  // Process the reverb
   reverb.processStereo(buffer.getWritePointer(0), buffer.getWritePointer(1), buffer.getNumSamples());
 }
 

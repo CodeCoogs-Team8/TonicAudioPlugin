@@ -52,17 +52,26 @@ public:
   // State management
   void getStateInformation(juce::MemoryBlock &destData) override;
   void setStateInformation(const void *data, int sizeInBytes) override;
-    
+
   juce::AudioProcessorValueTreeState parameters;
+
 private:
   juce::Reverb reverb;
-  
+
   std::atomic<float> *roomSizeParam = nullptr;
   std::atomic<float> *dampingParam = nullptr;
   std::atomic<float> *wetLevelParam = nullptr;
   std::atomic<float> *dryLevelParam = nullptr;
   std::atomic<float> *widthParam = nullptr;
   std::atomic<float> *freezeModeParam = nullptr;
+
+  // Processing state
+  double currentSampleRate = 0.0; // Initialize to 0 to indicate not set
+
+  // Sample rate validation
+  static constexpr double MIN_SAMPLE_RATE = 8000.0;   // Minimum valid sample rate
+  static constexpr double MAX_SAMPLE_RATE = 192000.0; // Maximum valid sample rate
+  bool isSampleRateValid() const { return currentSampleRate >= MIN_SAMPLE_RATE && currentSampleRate <= MAX_SAMPLE_RATE; }
 
   void updateReverbParameters();
 

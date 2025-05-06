@@ -91,50 +91,47 @@ void Chorus::processBlock(juce::AudioBuffer<float> &buffer, juce::MidiBuffer &mi
 {
   juce::ScopedNoDenormals noDenormals;
 
-  // Safety check for initialization
-  if (!isInitialized || !rateParam || !depthParam || !delayParam || !mixParam || !phaseParam)
+  // Check if we have a valid sample rate
+  if (!isSampleRateValid())
   {
     buffer.clear();
     return;
   }
 
+  // Safely get parameter values at the start of the block
+  const float rate = rateParam != nullptr ? rateParam->load() : defaultRate;
+  const float depth = depthParam != nullptr ? depthParam->load() : defaultDepth;
+  const float delay = delayParam != nullptr ? delayParam->load() : defaultDelay;
+  const float mix = mixParam != nullptr ? mixParam->load() : defaultMix;
+  const float phase = phaseParam != nullptr ? phaseParam->load() : defaultPhase;
+
   const int numChannels = buffer.getNumChannels();
   const int numSamples = buffer.getNumSamples();
 
-  // Get current parameter values with bounds checking
-  const float rate = juce::jlimit(minRate, maxRate, getRate());
-  const float depth = juce::jlimit(minDepth, maxDepth, getDepth());
-  const float centerDelay = juce::jlimit(minDelay, maxDelay, getDelay());
-  const float mix = juce::jlimit(minMix, maxMix, getMix());
-  const float phaseOffset = juce::jlimit(minPhase, maxPhase, getPhase()) *
-                            juce::MathConstants<float>::pi / 180.0f;
-
-  // Calculate phase increment for LFO
-  const float phaseInc = rate * juce::MathConstants<float>::twoPi / currentSampleRate;
-
-  for (int sample = 0; sample < numSamples; ++sample)
+  // Process each channel
+  for (int channel = 0; channel < numChannels; ++channel)
   {
-    // Calculate LFO values for left and right channels
-    const float lfoLeft = std::sin(lfoPhase);
-    const float lfoRight = std::sin(lfoPhase + phaseOffset);
+    auto *channelData = buffer.getWritePointer(channel);
+    float phaseOffset = (channel == 1) ? phase : 0.0f; // Apply phase offset to right channel
 
-    // Update LFO phase with wrapping
-    lfoPhase = std::fmod(lfoPhase + phaseInc, juce::MathConstants<float>::twoPi);
-
-    for (int channel = 0; channel < numChannels; ++channel)
+    for (int sample = 0; sample < numSamples; ++sample)
     {
-      auto *channelData = buffer.getWritePointer(channel);
       const float in = channelData[sample];
 
-      // Calculate delay time modulation
-      const float lfo = (channel == 0) ? lfoLeft : lfoRight;
-      const float delayTime = centerDelay + (depth * 10.0f * lfo); // +/- 10ms modulation
+      // Calculate LFO value
+      float lfoValue = std::sin(2.0f * M_PI * (lfoPhase + phaseOffset / 360.0f));
+      float delayTime = delay + (depth * lfoValue);
 
-      // Process through delay line
-      const float delayedSample = processChannel(in, channel, delayTime);
+      // Process the sample
+      float processed = processChannel(in, channel, delayTime);
 
-      // Mix dry and wet signals with safety bounds
-      channelData[sample] = in * (1.0f - mix) + delayedSample * mix;
+      // Mix dry and wet signals
+      channelData[sample] = in * (1.0f - mix) + processed * mix;
+
+      // Update LFO phase
+      lfoPhase += rate / currentSampleRate;
+      if (lfoPhase >= 1.0f)
+        lfoPhase -= 1.0f;
     }
   }
 }

@@ -39,12 +39,16 @@ DelayAudioProcessorEditor::DelayAudioProcessorEditor(DelayAudioProcessor &p)
         workspaceArea.reorderEffects(oldPosition, newPosition);
     };
 
+    // Start the timer to update level meters
+    startTimerHz(30); // Update at 30Hz
+
     // Make sure our window is big enough to fit our components
     setSize(1200, 800);
 }
 
 DelayAudioProcessorEditor::~DelayAudioProcessorEditor()
 {
+    stopTimer();
 }
 
 //==============================================================================
@@ -72,4 +76,13 @@ void DelayAudioProcessorEditor::resized()
 void DelayAudioProcessorEditor::setOutputLevel(float leftLevel, float rightLevel)
 {
     topBar.setLevels(leftLevel, rightLevel);
+}
+
+void DelayAudioProcessorEditor::timerCallback()
+{
+    // Get the current levels from the processor
+    auto levels = audioProcessor.getCurrentLevels();
+
+    // Update the level meters
+    setOutputLevel(levels.leftLevel, levels.rightLevel);
 }

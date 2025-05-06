@@ -15,7 +15,8 @@
 #include "./Components/TopBarComponent.h"
 
 //==============================================================================
-class DelayAudioProcessorEditor : public juce::AudioProcessorEditor
+class DelayAudioProcessorEditor : public juce::AudioProcessorEditor,
+                                  private juce::Timer
 {
 public:
   explicit DelayAudioProcessorEditor(DelayAudioProcessor &);
@@ -28,6 +29,8 @@ public:
   void setOutputLevel(float leftLevel, float rightLevel);
 
 private:
+  void timerCallback() override;
+
   // This reference is provided as a quick way for your editor to
   // access the processor object that created it.
   DelayAudioProcessor &audioProcessor;

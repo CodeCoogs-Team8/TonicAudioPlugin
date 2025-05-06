@@ -15,6 +15,16 @@
 class Distortion : public juce::AudioProcessor
 {
 public:
+  // Add enum for distortion types
+  enum class DistortionType
+  {
+    SoftClip,  // Current tanh-based distortion
+    HardClip,  // Hard clipping
+    Fold,      // Wave folding
+    BitCrush,  // Bit reduction
+    SampleRate // Sample rate reduction
+  };
+
   Distortion();
   ~Distortion() override;
 
@@ -59,11 +69,17 @@ private:
   std::atomic<float> *rangeParam = nullptr;
   std::atomic<float> *mixParam = nullptr;
   std::atomic<float> *outputGainParam = nullptr;
+  std::atomic<float> *typeParam = nullptr; // New parameter for distortion type
 
   // Processing state
-  double currentSampleRate = 44100.0;
+  double currentSampleRate = 0.0; // Initialize to 0 to indicate not set
   double lastSampleRate = 0.0;
   bool isInitialized = false;
+
+  // Sample rate validation
+  static constexpr double MIN_SAMPLE_RATE = 8000.0;   // Minimum valid sample rate
+  static constexpr double MAX_SAMPLE_RATE = 192000.0; // Maximum valid sample rate
+  bool isSampleRateValid() const { return currentSampleRate >= MIN_SAMPLE_RATE && currentSampleRate <= MAX_SAMPLE_RATE; }
 
   // Parameter ranges and defaults
   static constexpr float minDrive = 1.0f;
