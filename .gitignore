@@ -1,6 +1,7 @@
 # Builds
 Builds/
 JuceLibraryCode/
+build/
 
 # IDE
 .vscode/
