@@ -144,8 +144,8 @@
     </XCODE_MAC>
     <VS2022 targetFolder="Builds/VisualStudio2022" extraLinkerFlags="/LIBPATH:&quot;$(WindowsSdkDir)um\x64&quot; user32.lib ole32.lib shell32.lib advapi32.lib uuid.lib gdi32.lib comdlg32.lib">
       <CONFIGURATIONS>
-        <CONFIGURATION isDebug="1" name="Debug"/>
-        <CONFIGURATION isDebug="0" name="Release"/>
+        <CONFIGURATION isDebug="1" name="Debug" defines="_DEBUG=1&#10;JUCE_DEBUG=1 "/>
+        <CONFIGURATION isDebug="0" name="Release" defines="NDEBUG=1&#10;JUCE_DEBUG=0&#10;"/>
       </CONFIGURATIONS>
       <MODULEPATHS>
         <MODULEPATH id="juce_audio_basics" path="/Users/evanf/JUCE/modules"/>
