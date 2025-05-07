@@ -73,6 +73,10 @@ void Distortion::prepareToPlay(double sampleRate, int samplesPerBlock)
   // Store sample rate for potential future use
   currentSampleRate = sampleRate;
 
+  // Precompute max value for BitCrush
+  const float bitDepth = 8.0f; // 8-bit reduction
+  bitCrushMaxValue = std::pow(2.0f, bitDepth) - 1.0f;
+
   // Reset any processing state if needed
   reset();
 }
@@ -103,42 +107,59 @@ float Distortion::processSample(float sample, float drive, float range)
 
   switch (static_cast<DistortionType>(type))
   {
-  case DistortionType::SoftClip:
-    processed = std::tanh(input);
-    break;
-
-  case DistortionType::HardClip:
-    processed = input < -1.0f ? -1.0f : (input > 1.0f ? 1.0f : input);
-    break;
-
-  case DistortionType::Fold:
-    // Wave folding implementation
-    processed = std::abs(std::fmod(input + 1.0f, 2.0f) - 1.0f);
-    break;
-
-  case DistortionType::BitCrush:
-    // Bit reduction implementation
+    case DistortionType::SoftClip: 
     {
-      const float bitDepth = 8.0f; // 8-bit reduction
-      const float maxValue = std::pow(2.0f, bitDepth) - 1.0f;
-      processed = std::round(input * maxValue) / maxValue;
+      //Sigmoid function for soft clipping
+      float shape = 1.0f + 0.05f * drive; // tweak sensitivity
+      float shaped = 1.0f / (1.0f + std::exp(-shape * input)); // make the curve respond to the drive knob 
+      processed = 2.0f * shaped - 1.0f;
+      break;
     }
-    break;
+    case DistortionType::HardClip:
+      {
+        // Dynamic hard clip thresholds based on drive
+        // Drive goes from 1.0 to 25.0
+        float normalizedDrive = (drive - 1.0f) / (25.0f - 1.0f); // 0 to 1
+        float clipLimit = 1.0f - 0.6f * normalizedDrive; // From 1.0 down to 0.4
+    
+        processed = std::clamp(input, -clipLimit, clipLimit);
+        break;
+      }
+    
+    case DistortionType::Fold:
+      // Symmetric wave folding implementation
+      {
+        float foldFactor = 2.0f; // Number of folds — can tie to drive
+        float x = input * foldFactor;
+    
+        processed = std::fmod(x + 3.0f, 4.0f); // keep in [0, 4]
+        if (processed >= 2.0f)
+            processed = 4.0f - processed; // reflect upper half
+    
+        processed -= 1.0f; // center to [-1, 1]
+        break;
+      }
+    case DistortionType::BitCrush:
+      // Bit reduction implementation
+      {
+        processed = std::round(input * bitCrushMaxValue) / bitCrushMaxValue;
+      }
+      break;
 
-  case DistortionType::SampleRate:
-    // Sample rate reduction implementation
-    {
-      static float lastSample = 0.0f;
-      static int sampleCounter = 0;
-      const int reductionFactor = 4; // Reduce sample rate by factor of 4
+    case DistortionType::SampleRate:
+      // Sample rate reduction implementation
+      {
+        static float lastSample = 0.0f;
+        static int sampleCounter = 0;
+        const int reductionFactor = 4; // Reduce sample rate by factor of 4
 
-      if (sampleCounter % reductionFactor == 0)
-        lastSample = input;
+        if (sampleCounter % reductionFactor == 0)
+          lastSample = input;
 
-      processed = lastSample;
-      sampleCounter++;
-    }
-    break;
+        processed = lastSample;
+        sampleCounter++;
+      }
+      break;
   }
 
   // Apply range control (blend between distorted and hard clipped)
