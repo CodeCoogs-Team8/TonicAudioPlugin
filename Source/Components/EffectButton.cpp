@@ -140,8 +140,8 @@ void EffectButton::paint(juce::Graphics &g)
   g.setColour(dragging ? juce::Colour(55, 55, 55).withAlpha(0.95f) : juce::Colour(45, 45, 45).withAlpha(0.95f));
   g.fillPath(buttonPath);
 
-  // Draw outer edge highlight ( purple when dragging, white when not)
-  if (dragging)
+  // Draw outer edge highlight (purple when active or dragging, gray when not)
+  if (active || dragging)
     g.setColour(juce::Colour(148, 101, 211).withAlpha(0.95f));
   else
     g.setColour(juce::Colour(70, 70, 70).withAlpha(0.8f));
