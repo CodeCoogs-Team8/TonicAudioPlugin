@@ -100,7 +100,17 @@ void EffectParameterComponent::setEnabled(bool shouldBeEnabled)
     // Update the processor if available
     if (auto *processor = getProcessor())
     {
-        // TODO: Implement effect bypass in the processor
+        // Cast to our specific effect types to handle bypass
+        if (auto *delay = dynamic_cast<Delay *>(processor))
+            delay->setBypassed(!enabled);
+        else if (auto *distortion = dynamic_cast<Distortion *>(processor))
+            distortion->setBypassed(!enabled);
+        else if (auto *reverb = dynamic_cast<Reverb *>(processor))
+            reverb->setBypassed(!enabled);
+        else if (auto *chorus = dynamic_cast<Chorus *>(processor))
+            chorus->setBypassed(!enabled);
+        else if (auto *eq = dynamic_cast<Equalizer *>(processor))
+            eq->setBypassed(!enabled);
     }
 
     repaint();

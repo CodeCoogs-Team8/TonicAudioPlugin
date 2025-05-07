@@ -35,6 +35,9 @@ public:
   bool isMidiEffect() const override { return false; }
   double getTailLengthSeconds() const override { return 0.0; }
 
+  bool isBypassed() const { return bypassed; }
+  void setBypassed(bool shouldBeBypassed) { bypassed = shouldBeBypassed; }
+
   int getNumPrograms() override { return 1; }
   int getCurrentProgram() override { return 0; }
   void setCurrentProgram(int index) override {}
@@ -92,11 +95,13 @@ private:
   static constexpr float defaultMix = 0.5f;
 
   static constexpr float minPhase = 0.0f;
-  static constexpr float maxPhase = 360.0f;
+  static constexpr float maxPhase = 180.0f;
   static constexpr float defaultPhase = 90.0f;
 
   // Maximum delay time in milliseconds
   static constexpr float maxDelayTimeMs = 50.0f;
+
+  std::atomic<bool> bypassed{false}; // Add bypass state
 
   void updateFilters();
   void resetFilters();

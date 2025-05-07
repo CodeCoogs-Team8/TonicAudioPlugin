@@ -30,6 +30,9 @@ public:
   bool isMidiEffect() const override { return false; }
   double getTailLengthSeconds() const override { return 2.0; }
 
+  bool isBypassed() const { return bypassed; }
+  void setBypassed(bool shouldBeBypassed) { bypassed = shouldBeBypassed; }
+
   // Editor methods
   bool hasEditor() const override { return true; }
   juce::AudioProcessorEditor *createEditor() override;
@@ -64,6 +67,7 @@ private:
   std::atomic<float> *dryLevelParam = nullptr;
   std::atomic<float> *widthParam = nullptr;
   std::atomic<float> *freezeModeParam = nullptr;
+  std::atomic<bool> bypassed{false};
 
   // Processing state
   double currentSampleRate = 0.0; // Initialize to 0 to indicate not set

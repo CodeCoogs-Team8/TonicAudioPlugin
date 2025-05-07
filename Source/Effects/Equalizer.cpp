@@ -139,11 +139,10 @@ void Equalizer::processBlock(juce::AudioBuffer<float> &buffer, juce::MidiBuffer 
 {
   juce::ScopedNoDenormals noDenormals;
 
-  // Check if we have a valid sample rate
-  if (!isSampleRateValid())
+  // Check if we have a valid sample rate or if bypassed
+  if (!isSampleRateValid() || bypassed)
   {
-    buffer.clear();
-    return;
+    return; // Pass through audio unchanged when bypassed
   }
 
   // Update filters if needed

@@ -45,6 +45,9 @@ public:
   bool isMidiEffect() const override { return false; }
   double getTailLengthSeconds() const override { return 0.0; }
 
+  bool isBypassed() const { return bypassed; }
+  void setBypassed(bool shouldBeBypassed) { bypassed = shouldBeBypassed; }
+
   int getNumPrograms() override { return 1; }
   int getCurrentProgram() override { return 0; }
   void setCurrentProgram(int index) override {}
@@ -97,6 +100,8 @@ private:
   static constexpr float minGain = 0.0f;
   static constexpr float maxOutputGain = 2.0f;
   static constexpr float defaultGain = 1.0f;
-
+  // Bit crushing parameters
+  float bitCrushMaxValue = 255.0f;   // Default to 8-bit (2^8 - 1)
+  std::atomic<bool> bypassed{false}; // Add bypass state
   JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(Distortion)
 };

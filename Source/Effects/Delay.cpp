@@ -55,6 +55,10 @@ void Delay::prepareToPlay(double sampleRate, int samplesPerBlock)
   currentSampleRate = sampleRate;
   delayLine.prepare({sampleRate, static_cast<juce::uint32>(samplesPerBlock), 2});
   delayLine.setMaximumDelayInSamples(static_cast<int>(sampleRate * 2.0)); // Max 2 seconds delay
+
+  // Initialize delay time
+  const float initialDelayTime = delayTimeParam != nullptr ? delayTimeParam->load() : 0.5f;
+  delayLine.setDelay(static_cast<int>(initialDelayTime * sampleRate));
 }
 
 void Delay::releaseResources()
@@ -74,6 +78,14 @@ void Delay::processBlock(juce::AudioBuffer<float> &buffer, juce::MidiBuffer &mid
     return;
   }
 
+  // Check if the effect is bypassed
+  if (isBypassed())
+  {
+    // Clear the delay line when bypassed
+    delayLine.reset();
+    return;
+  }
+
   // Safely get parameter values at the start of the block
   const float delayTime = delayTimeParam != nullptr ? delayTimeParam->load() : 0.5f;
   const float feedback = feedbackParam != nullptr ? feedbackParam->load() : 0.4f;
@@ -82,9 +94,16 @@ void Delay::processBlock(juce::AudioBuffer<float> &buffer, juce::MidiBuffer &mid
   const int numChannels = buffer.getNumChannels();
   const int numSamples = buffer.getNumSamples();
 
-  // Update delay time
-  const int delaySamples = static_cast<int>(delayTime * currentSampleRate);
-  delayLine.setDelay(delaySamples);
+  // Calculate new delay time in samples
+  const int newDelaySamples = static_cast<int>(delayTime * currentSampleRate);
+
+  // Only update delay time if it has changed significantly (more than 1 sample)
+  if (std::abs(newDelaySamples - delayLine.getDelay()) > 1)
+  {
+    // Clear the delay line and set new delay time
+    delayLine.reset();
+    delayLine.setDelay(newDelaySamples);
+  }
 
   // Process each channel
   for (int channel = 0; channel < numChannels; ++channel)

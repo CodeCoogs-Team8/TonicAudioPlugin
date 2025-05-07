@@ -56,6 +56,7 @@ Reverb::Reverb()
                       false          // default value
                       )})
 {
+  DBG("Reverb: Created");
   roomSizeParam = parameters.getRawParameterValue("roomSize");
   dampingParam = parameters.getRawParameterValue("damping");
   wetLevelParam = parameters.getRawParameterValue("wetLevel");
@@ -66,6 +67,7 @@ Reverb::Reverb()
 
 Reverb::~Reverb()
 {
+  DBG("Reverb: Destroyed");
   releaseResources();
   roomSizeParam = nullptr;
   dampingParam = nullptr;
@@ -77,6 +79,7 @@ Reverb::~Reverb()
 
 void Reverb::prepareToPlay(double sampleRate, int samplesPerBlock)
 {
+  currentSampleRate = sampleRate;
   reverb.setSampleRate(sampleRate);
   updateReverbParameters();
 }
@@ -91,9 +94,14 @@ void Reverb::processBlock(juce::AudioBuffer<float> &buffer, juce::MidiBuffer &mi
 {
   juce::ScopedNoDenormals noDenormals;
 
+  // If bypassed, pass through audio unchanged
+  if (bypassed)
+    return;
+
   // Check if we have a valid sample rate
   if (!isSampleRateValid())
   {
+    DBG("Reverb: Invalid sample rate - clearing buffer");
     buffer.clear();
     return;
   }

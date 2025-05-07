@@ -32,6 +32,9 @@ public:
   bool isMidiEffect() const override { return false; }
   double getTailLengthSeconds() const override { return 0.0; }
 
+  bool isBypassed() const { return bypassed; }
+  void setBypassed(bool shouldBeBypassed) { bypassed = shouldBeBypassed; }
+
   int getNumPrograms() override { return 1; }
   int getCurrentProgram() override { return 0; }
   void setCurrentProgram(int) override {}
@@ -51,6 +54,7 @@ private:
   double currentSampleRate = 0.0;                     // Initialize to 0 to indicate not set
   static constexpr double MIN_SAMPLE_RATE = 8000.0;   // Minimum valid sample rate
   static constexpr double MAX_SAMPLE_RATE = 192000.0; // Maximum valid sample rate
+  std::atomic<bool> bypassed{false};                  // Add bypass state
 
   bool isSampleRateValid() const { return currentSampleRate >= MIN_SAMPLE_RATE && currentSampleRate <= MAX_SAMPLE_RATE; }
 

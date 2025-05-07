@@ -34,6 +34,9 @@ public:
   bool isMidiEffect() const override { return false; }
   double getTailLengthSeconds() const override { return 0.0; }
 
+  bool isBypassed() const { return bypassed; }
+  void setBypassed(bool shouldBeBypassed) { bypassed = shouldBeBypassed; }
+
   int getNumPrograms() override { return 1; }
   int getCurrentProgram() override { return 0; }
   void setCurrentProgram(int index) override {}
@@ -97,11 +100,13 @@ private:
 
   static constexpr float minHighFreq = 1000.0f;
   static constexpr float maxHighFreq = 20000.0f;
-  static constexpr float defaultHighFreq = 5000.0f;
+  static constexpr float defaultHighFreq = 10000.0f;
 
   static constexpr float minQ = 0.1f;
   static constexpr float maxQ = 10.0f;
   static constexpr float defaultMidQ = 1.0f;
+
+  std::atomic<bool> bypassed{false}; // Add bypass state
 
   void updateFilters();
   void resetFilters();
