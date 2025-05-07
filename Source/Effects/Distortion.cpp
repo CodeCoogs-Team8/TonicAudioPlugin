@@ -73,6 +73,10 @@ void Distortion::prepareToPlay(double sampleRate, int samplesPerBlock)
   // Store sample rate for potential future use
   currentSampleRate = sampleRate;
 
+  // Precompute max value for BitCrush
+  const float bitDepth = 8.0f; // 8-bit reduction
+  bitCrushMaxValue = std::pow(2.0f, bitDepth) - 1.0f;
+
   // Reset any processing state if needed
   reset();
 }
@@ -138,9 +142,7 @@ float Distortion::processSample(float sample, float drive, float range)
     case DistortionType::BitCrush:
       // Bit reduction implementation
       {
-        const float bitDepth = 8.0f; // 8-bit reduction
-        const float maxValue = std::pow(2.0f, bitDepth) - 1.0f;
-        processed = std::round(input * maxValue) / maxValue;
+        processed = std::round(input * bitCrushMaxValue) / bitCrushMaxValue;
       }
       break;
 
