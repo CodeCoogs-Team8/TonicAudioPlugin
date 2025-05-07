@@ -10,6 +10,9 @@ build/
 *.xcworkspace/
 xcuserdata/
 
+.vs/
+out/
+
 # macOS
 .DS_Store
 .AppleDouble
