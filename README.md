@@ -98,6 +98,8 @@ Ensure `Tonic_SharedCode` project builds successfully. If not:
 
 You can build the plugin and run it inside AudioPluginHost by connecting a sine oscillator → your plugin → output speakers. This helps you visualize how your effect manipulates audio in real time.
 
+We have tested before with success!
+
 ---
 
 Happy hacking! 🎶
